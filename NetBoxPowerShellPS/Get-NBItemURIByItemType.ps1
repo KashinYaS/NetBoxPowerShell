@@ -12,8 +12,11 @@ function Get-NBItemURIByItemType {
   switch ( $ItemType ) {
     'Prefix'             { $URI = $NBBaseURL + 'ipam/prefixes/'     }
     'Site'               { $URI = $NBBaseURL + 'dcim/sites/'        }	 
-	'Device'             { $URI = $NBBaseURL + 'dcim/devices/'      }     
+	'Device'             { $URI = $NBBaseURL + 'dcim/devices/'      }
+	'DeviceType'         { $URI = $NBBaseURL + 'dcim/device-types/' }
+	'DeviceBay'          { $URI = $NBBaseURL + 'dcim/device-bays/'  }	
 	'Interface'          { $URI = $NBBaseURL + 'dcim/interfaces/'   }
+	'Rack'               { $URI = $NBBaseURL + 'dcim/racks/'        } 
 	'VRF'                { $URI = $NBBaseURL + 'ipam/vrfs/'         }
 	'Address'            { $URI = $NBBaseURL + 'ipam/ip-addresses/' }
 	'IPAddress'          { $URI = $NBBaseURL + 'ipam/ip-addresses/' }
