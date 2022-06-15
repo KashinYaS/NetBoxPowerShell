@@ -22,8 +22,10 @@ function Get-NBItemURIByItemType {
 	'IPAddress'          { $URI = $NBBaseURL + 'ipam/ip-addresses/' }
 	'ip'                 { $URI = $NBBaseURL + 'ipam/ip-addresses/' }
 	'vlan'               { $URI = $NBBaseURL + 'ipam/vlans/'        }	
+	'vlangroup'          { $URI = $NBBaseURL + 'ipam/vlan-groups/'  }	
 	'cluster'            { $URI = $NBBaseURL + 'virtualization/clusters/' }
 	'vm'                 { $URI = $NBBaseURL + 'virtualization/virtual-machines/' }
+	'VirtualMachine'     { $URI = $NBBaseURL + 'virtualization/virtual-machines/' }
 	'vInterface'         { $URI = $NBBaseURL + 'virtualization/interfaces/'   }	
 	default              { $URI = $NBBaseURL + $ItemType + '/'}
   } 
