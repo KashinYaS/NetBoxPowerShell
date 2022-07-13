@@ -11,6 +11,7 @@ function Get-NBItemURIByItemType {
   $ItemType = $ItemType.Trim().ToLower()
   switch ( $ItemType ) {
     'Prefix'             { $URI = $NBBaseURL + 'ipam/prefixes/'     }
+    'PrefixAvailableIPs' { $URI = $NBBaseURL + 'ipam/prefixes/'     }
     'Site'               { $URI = $NBBaseURL + 'dcim/sites/'        }	 
 	'Device'             { $URI = $NBBaseURL + 'dcim/devices/'      }
 	'DeviceType'         { $URI = $NBBaseURL + 'dcim/device-types/' }
