@@ -31,7 +31,7 @@ function Get-NBItemURIByItemType {
 	default              { $URI = $NBBaseURL + $ItemType + '/'}
   } 
   
-  return $URI
+  return [string]$URI
 }
 
 

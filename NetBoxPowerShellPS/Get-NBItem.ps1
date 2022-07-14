@@ -41,32 +41,42 @@ Function Get-NBItem {
 	  $URI = $URI + $ItemID + '/'
   }
 
-  $URI = $URI + $NBURLTail
-  
+  if ($ItemType.Trim().ToLower() -eq 'PrefixAvailableIPs') {
+    $URI = $URI + 'available-ips/'
+  }
+ 
+
   if ($ItemPropName) {
 	  $URI = $URI + '&' + $ItemPropName + '=' + [System.Web.HttpUtility]::UrlEncode($ItemPropValue)
   }
   
+  $URI = $URI + $NBURLTail
   
   # not using Invoke-RestMethod due to encoding bug
   $NBItems = @()
 
   do {
-   if (($RawData.count) -and (-not $Silent)) {
-     $PercentComplete = [math]::Floor($NBItems.Count / $RawData.count * 100)
-     Write-Progress -Activity "Processing Netbox Items ($($ItemType))" -CurrentOperation "Searching" -PercentComplete $PercentComplete
-   }
+    if (($RawData.count) -and (-not $Silent)) {
+      $PercentComplete = [math]::Floor($NBItems.Count / $RawData.count * 100)
+      Write-Progress -Activity "Processing Netbox Items ($($ItemType))" -CurrentOperation "Searching" -PercentComplete $PercentComplete
+    }
     $request = [System.Net.WebRequest]::Create("$($URI)")
     $request.ContentType = $NBContentType
     $request.Accept = "application/json"
     $request.Headers.Add('Authorization',"Token $NBToken")
+    $RawData = $null
     try {
       $response = $request.GetResponse()
       $reader = new-object System.IO.StreamReader($response.GetResponseStream())
       $RawData = ConvertFrom-Json $reader.ReadToEnd()
       if ($RawData) {
-	    if ($RawData.Count) {
-		  $NBItems = $NBItems + $RawData.results
+	    if ($RawData.count) {
+		  if (($RawData.results -ne $null)) {
+		    $NBItems = $NBItems + $RawData.results
+		  }
+		  else {
+		    $NBItems = $NBItems + $RawData
+		  }
 		}
 		else
 		{
@@ -78,14 +88,22 @@ Function Get-NBItem {
       if($_.ErrorDetails.Message) {
         write-host "Get-NBItem: $($_.ErrorDetails.Message)" -foreground Red
 		$NBItems = @()
+		$URI = $null
       }
 	  else {
         write-host "Get-NBItem: $($_)" -foreground Red
 		$NBItems = @()
+		$URI = $null
       }
 	}
-    $URI = $RawData.next
-  } while ($RawData.next)
+	
+	if ($RawData.next -and ([system.uri]::IsWellFormedUriString($RawData.next,[System.UriKind]::Absolute))) {
+      $URI = $RawData.next
+	}
+	else {
+	  $URI = $null
+	}
+  } while ($URI)
 
   $RetVal = $NBItems
   
